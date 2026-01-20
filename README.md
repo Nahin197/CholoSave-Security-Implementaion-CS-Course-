@@ -1,165 +1,215 @@
 
 
-```markdown
-# CholoSave (University Computer Security Project)
+---
+# 🚀 CholoSave
 
-CholoSave is a PHP + MySQL web application built as a **Computer Security course project**.  
-This repository focuses on implementing **practical security controls** (authentication hardening, form protection, OTP flows, alerting, and safe database interaction) inside a finance/savings-style web platform with group features.
+### *University Computer Security Project*
 
-## Key Features
-
-### ✅ Security Features Implemented
-- **Password Security**
-  - Strong password policy validation (`password_utils.php`)
-  - Secure password hashing (supports **Argon2id / Argon2i / bcrypt** fallback)
-  - Password verification on login using `password_verify()`
-
-- **CSRF Protection**
-  - CSRF token generation + verification on forms (e.g., `register.php`, `contact_us.php`)
-
-- **Bot Protection (CAPTCHA)**
-  - **Cloudflare Turnstile** verification on sensitive forms (e.g., Register / Contact Us)
-
-- **Rate Limiting / Throttling**
-  - Session-based rate limiting for form submissions (e.g., registration/contact) to reduce spam/bruteforce attempts
-
-- **Session Security**
-  - Secure cookie flags and strict session options (HttpOnly, Secure, SameSite)
-  - `session_regenerate_id(true)` after login/registration to reduce session fixation risk
-
-- **OTP-based Verification**
-  - **Forgot Password OTP** email flow (`forgot_password.php` → `verify_otp.php` → `reset_password.php`)
-  - OTP expiry enforced using server-side timestamp checks
-
-- **Security Alerting**
-  - **Email alert on login from a new IP** (`login.php` compares `last_login_ip`)
-
-- **SQL Injection Mitigation**
-  - Uses prepared statements (`$conn->prepare(...)`) across multiple modules
-
-> Note: Some planned items in the "Security Features" notes may not be implemented everywhere yet (example: full login brute-force lockout). This project demonstrates multiple real security controls integrated into a working application.
+CholoSave is a **PHP + MySQL web application** developed as part of a **Computer Security course project**.
+The project demonstrates **real-world security implementations** such as authentication hardening, CSRF protection, OTP verification, secure session handling, and database protection — all inside a finance/savings-style group management system.
 
 ---
 
-## Tech Stack
-- **Backend:** PHP
-- **Database:** MySQL / MariaDB
-- **Frontend:** HTML, CSS, Tailwind (CDN), JS
-- **Email:** PHPMailer
-- **CAPTCHA:** Cloudflare Turnstile
-- **WebSocket Chat:** Ratchet (PHP) on port `8080`
-- **Optional AI Tips Service:** Flask + Groq API (`ai_tips/generate_tips.py`)
+## 🔐 Key Security Features
+
+### ✅ Authentication & Password Security
+
+* Strong password policy validation (`password_utils.php`)
+* Secure password hashing:
+
+  * **Argon2id / Argon2i**
+  * Fallback to **bcrypt**
+* Secure login verification using `password_verify()`
+
+### ✅ CSRF Protection
+
+* CSRF token generation and validation
+* Applied on sensitive forms such as:
+
+  * Registration
+  * Contact form
+  * Password reset
+
+### ✅ Bot Protection
+
+* **Cloudflare Turnstile CAPTCHA**
+* Protects forms from automated attacks
+
+### ✅ Rate Limiting
+
+* Session-based throttling
+* Prevents spam and brute-force attacks
+
+### ✅ Session Security
+
+* Secure session flags:
+
+  * `HttpOnly`
+  * `Secure`
+  * `SameSite`
+* Session regeneration after login
+
+### ✅ OTP-Based Verification
+
+* Forgot-password OTP system:
+
+  * `forgot_password.php`
+  * `verify_otp.php`
+  * `reset_password.php`
+* OTP expiry enforced using timestamps
+
+### ✅ Security Alerts
+
+* Email notification when login occurs from a **new IP address**
+
+### ✅ SQL Injection Protection
+
+* Prepared statements used throughout the project
+* No raw SQL execution
 
 ---
 
-## Project Structure (High-level)
+## 🧰 Tech Stack
 
-- `/admin` — admin dashboards and management pages  
-- `/group_admin` — group admin features (payments, OTP verification, reports, etc.)
-- `/group_member` — group member dashboards and actions  
-- `/includes` — shared headers/footers/assets  
-- `/ai_tips` — optional AI service for finance tips (Flask)  
-- `server.php` — Ratchet WebSocket server for real-time chat  
-- `cholosave_db.sql` — database schema and sample data  
+| Layer     | Technology                      |
+| --------- | ------------------------------- |
+| Backend   | PHP                             |
+| Database  | MySQL / MariaDB                 |
+| Frontend  | HTML, CSS, Tailwind, JavaScript |
+| Email     | PHPMailer                       |
+| CAPTCHA   | Cloudflare Turnstile            |
+| WebSocket | Ratchet (PHP)                   |
+| AI Module | Flask + Groq API                |
 
 ---
 
-## Setup Instructions (Localhost using XAMPP)
-
-### 1) Requirements
-- XAMPP / WAMP / LAMP (PHP + MySQL)
-- PHP CLI (for Ratchet server)
-- Composer
-
-### 2) Put Project in htdocs
-Copy the project folder into:
-- `C:\xampp\htdocs\` (Windows)  
-or  
-- `/var/www/html/` (Linux)
-
-Example:
-```
-
-xampp/htdocs/CholoSave-CS/
+## 📁 Project Structure
 
 ```
-
-### 3) Create Database
-1. Open `phpMyAdmin`
-2. Create a DB named:
+/admin          → Admin dashboard  
+/group_admin    → Group admin controls  
+/group_member   → Member features  
+/includes       → Shared layouts and configs  
+/ai_tips        → AI-powered finance tips  
+server.php      → WebSocket chat server  
+cholosave_db.sql → Database schema  
 ```
 
+---
+
+## ⚙️ Setup Instructions (XAMPP)
+
+### 1️⃣ Requirements
+
+* XAMPP / WAMP / LAMP
+* PHP 8+
+* Composer
+* MySQL
+
+---
+
+### 2️⃣ Place Project
+
+Copy project folder into:
+
+```
+C:\xampp\htdocs\CholoSave-CS
+```
+
+or (Linux):
+
+```
+/var/www/html/CholoSave-CS
+```
+
+---
+
+### 3️⃣ Create Database
+
+1. Open **phpMyAdmin**
+2. Create database:
+
+```
 cholosave_cs
-
 ```
+
 3. Import:
+
+```
+cholosave_db.sql
 ```
 
-cholosave_db.sql
+---
 
-````
+### 4️⃣ Configure Database
 
-### 4) Configure Database Connection
-Update `db.php` if needed:
+Edit `db.php`:
+
 ```php
 $host = "localhost";
 $username = "root";
 $password = "";
 $dbname = "cholosave_cs";
-````
+```
 
-### 5) Install PHP Dependencies
+---
 
-In the project root:
+### 5️⃣ Install Dependencies
 
 ```bash
 composer install
 ```
 
-(There are also composer files inside `group_admin/` and `group_member/`. If you use those modules separately, run composer there too.)
+(Repeat inside `group_admin/` and `group_member/` if needed.)
 
 ---
 
-## ⚠️ Security Setup Before Running (IMPORTANT)
+## 🔐 Security Setup (IMPORTANT)
 
-### A) Remove Hardcoded Email Credentials (PHPMailer)
+### ✅ Remove Hardcoded Secrets
 
-Currently, SMTP credentials are hardcoded in files like:
+❌ DO NOT push these:
 
-* `login.php`
-* `forgot_password.php`
+* Gmail passwords
+* API keys
+* CAPTCHA secrets
 
-✅ Recommended fix:
+### ✅ Use `.env` File
 
-1. Create a config file like `config/secrets.php` (and add it to `.gitignore`)
-2. Load SMTP settings from environment variables
+Create `.env.example`:
 
-Example env variables:
+```env
+DB_HOST=localhost
+DB_NAME=cholosave_cs
+DB_USER=root
+DB_PASS=
 
-* `SMTP_HOST`
-* `SMTP_USER`
-* `SMTP_PASS`
-* `SMTP_PORT`
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
 
-### B) Turnstile Keys
+TURNSTILE_SITE_KEY=your_site_key
+TURNSTILE_SECRET_KEY=your_secret_key
 
-Turnstile secret is currently hardcoded (e.g., `register.php`, `contact_us.php`).
+GROQ_API_KEY=your_api_key
+```
 
-✅ Recommended fix:
+Add this to `.gitignore`:
 
-* Store Turnstile keys in env/config and never commit them to GitHub.
+```
+.env
+```
 
 ---
 
-## Running the App
+## ▶️ Running the Project
 
-### 1) Start Apache + MySQL
+### Start Server
 
-From XAMPP control panel.
-
-### 2) Open in Browser
-
-Example:
+1. Open XAMPP
+2. Start **Apache** and **MySQL**
+3. Visit:
 
 ```
 http://localhost/CholoSave-CS/
@@ -167,73 +217,58 @@ http://localhost/CholoSave-CS/
 
 ---
 
-## Real-time Chat (WebSocket)
+## 💬 WebSocket Chat
 
-The project includes a Ratchet WebSocket server (`server.php`) running on:
-
-```
-ws://localhost:8080
-```
-
-To run it:
+Start the WebSocket server:
 
 ```bash
 php server.php
 ```
 
-Keep this terminal running while using the chat feature.
+Runs on:
+
+```
+ws://localhost:8080
+```
 
 ---
 
-## Optional: AI Tips Service (Flask + Groq)
-
-There is an optional Python microservice:
-
-* `ai_tips/generate_tips.py`
-
-It expects:
-
-* Python installed
-* `GROQ_API_KEY` in environment
-
-Example run:
+## 🤖 AI Tips Module (Optional)
 
 ```bash
 cd ai_tips
 pip install -r requirements.txt
 set GROQ_API_KEY=your_key_here   # Windows
-export GROQ_API_KEY=your_key_here # Linux/Mac
+export GROQ_API_KEY=your_key_here # Linux
 python generate_tips.py
 ```
 
 ---
 
-## Database Notes (Extra Tables You May Need)
+## 🗄️ Extra Database Tables
 
-Some security features reference extra tables that may not be in `cholosave_db.sql` yet, depending on your version.
-
-### Example: `security_logs` table (used in `register.php`)
+### Security Logs
 
 ```sql
 CREATE TABLE security_logs (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  event_type VARCHAR(50) NOT NULL,
+  event_type VARCHAR(50),
   details TEXT,
   ip_address VARCHAR(45),
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-### Example: `payment_otps` table (used in OTP payment verification)
+### OTP Payments
 
 ```sql
 CREATE TABLE payment_otps (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  group_id INT NOT NULL,
-  otp VARCHAR(10) NOT NULL,
-  otp_expiry DATETIME NOT NULL,
-  amount DECIMAL(10,2) NOT NULL,
+  user_id INT,
+  group_id INT,
+  otp VARCHAR(10),
+  otp_expiry DATETIME,
+  amount DECIMAL(10,2),
   transaction_id VARCHAR(100),
   payment_method VARCHAR(50),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -242,46 +277,44 @@ CREATE TABLE payment_otps (
 
 ---
 
-## Demo Roles
+## 👤 User Roles
 
-The app supports role-based access via `users.role`:
+| Role        | Access             |
+| ----------- | ------------------ |
+| user        | Basic features     |
+| group_admin | Group control      |
+| admin       | Full system access |
 
-* `user`
-* `group_admin`
-* `admin`
+Admin Panel:
 
-Admin dashboard route:
-
-* `/admin/admin_dashboard.php`
-
----
-
-## Security Disclaimer
-
-This is an academic security project. Before deploying publicly:
-
-* Remove all hardcoded secrets
-* Enforce HTTPS in production
-* Add server-side login brute-force lockouts
-* Audit authorization checks for every sensitive action
-* Use a proper secrets manager / `.env` system
-
----
-
-## Team
-
-Built by me and my teammates as a **University Computer Security course project**.
-
----
-
-## License
-
-This project is for educational use. Add a license if you plan to open-source it.
-
+```
+/admin/admin_dashboard.php
 ```
 
 ---
 
- 
-- and give you a **safe “before pushing to GitHub” checklist** (so you don’t accidentally leak passwords/keys).
-```
+## ⚠️ Security Disclaimer
+
+This project is for **academic purposes only**.
+
+Before deploying:
+
+* Remove all secrets
+* Enable HTTPS
+* Add login attempt limits
+* Harden server permissions
+* Use environment variables
+* Audit authorization logic
+
+---
+
+## 👨‍💻 Team
+
+Developed by me and my teammates as a **University Computer Security Project**.
+
+---
+
+
+---
+
+
