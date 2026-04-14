@@ -18,7 +18,7 @@ The application allows users to create and join savings groups, make installment
 
 ## 🎯 Security Threat Model
 
-The security architecture follows a four-phase threat mitigation model defined by Team **Breach Quadrilateral**:
+The security architecture follows a four-phase threat mitigation model defined by Team **Team Xenon**:
 
 | Phase | Threat | Countermeasures Implemented |
 |---|---|---|
